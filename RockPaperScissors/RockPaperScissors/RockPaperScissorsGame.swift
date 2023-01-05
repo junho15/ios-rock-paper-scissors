@@ -29,14 +29,14 @@ struct RockPaperScissorsGame {
     private func getSelectedUserMenu() -> Int {
         printUserMenu()
         guard let selectedUserMenu: Int = userInput() else {
-            print("잘못된 입력입니다. 다시 시도해주세요.")
+            print(Message.invalidInput)
             
             return getSelectedUserMenu()
         }
         if isCorrectUserMenu(selectedUserMenu) {
             return selectedUserMenu
         } else {
-            print("잘못된 입력입니다. 다시 시도해주세요.")
+            print(Message.invalidInput)
             
             return getSelectedUserMenu()
         }
@@ -49,7 +49,7 @@ struct RockPaperScissorsGame {
     }
     
     private func printUserMenu() {
-        print("가위(1), 바위(2), 보(3)! <종료 : 0> : ", terminator: "")
+        print(Message.rockPaperScissorsMenu, terminator: "")
     }
 
     private func isCorrectUserMenu(_ userMenu: Int) -> Bool {
@@ -72,25 +72,21 @@ struct RockPaperScissorsGame {
         guard userHand != computerHand else {
             return .draw
         }
-        switch userHand {
-        case .rock:
-            if computerHand == .scissors {
-                return .win
-            } else {
-                return .lose
-            }
-        case .paper:
-            if computerHand == .rock {
-                return .win
-            } else {
-                return .lose
-            }
-        case .scissors:
-            if computerHand == .paper {
-                return .win
-            } else {
-                return .lose
-            }
+        switch (userHand, computerHand) {
+        case (.rock, .scissors):
+            return .win
+        case (.rock, .paper):
+            return .lose
+        case (.paper, .scissors):
+            return .lose
+        case (.paper, .rock):
+            return .win
+        case (.scissors, .paper):
+            return .win
+        case (.scissors, .rock):
+            return .lose
+        default:
+            return .draw
         }
     }
 }

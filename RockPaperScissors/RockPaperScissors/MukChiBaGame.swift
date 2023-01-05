@@ -5,6 +5,8 @@
 //  Created by LJ, 준호.
 //
 
+import Foundation
+
 struct MukChiBaGame {
     private var turnOwner: Participant?
     
@@ -49,7 +51,7 @@ struct MukChiBaGame {
         guard let nameToPrint = turnOwner?.name else {
             return
         }
-        print("[\(nameToPrint) 턴] 묵(1), 찌(2), 빠(3)! <종료 : 0> : ", terminator: "")
+        print(String(format: Message.mukChiBaMenu.description, nameToPrint), terminator: "")
     }
     
     private func userInput() -> Int? {
@@ -59,7 +61,7 @@ struct MukChiBaGame {
     }
     
     private func printWrongInputMessage() {
-        print("잘못된 입력입니다. 다시 시도해주세요.")
+        print(Message.invalidInput)
     }
     
     mutating private func getCorrectUserMenu(_ selectedUserMenu: Int) -> Int {
@@ -89,25 +91,21 @@ struct MukChiBaGame {
         guard userHand != computerHand else {
             return .draw
         }
-        switch userHand {
-        case .muk:
-            if computerHand == .chi {
-                return .win
-            } else {
-                return .lose
-            }
-        case .chi:
-            if computerHand == .ba {
-                return .win
-            } else {
-                return .lose
-            }
-        case .ba:
-            if computerHand == .muk {
-                return .win
-            } else {
-                return .lose
-            }
+        switch (userHand, computerHand) {
+        case (.muk, .ba):
+            return .lose
+        case (.muk, .chi):
+            return .win
+        case (.chi, .muk):
+            return .lose
+        case (.chi, .ba):
+            return .win
+        case (.ba, .chi):
+            return .lose
+        case (.ba, .muk):
+            return .win
+        default:
+            return .draw
         }
     }
     
@@ -141,9 +139,9 @@ struct MukChiBaGame {
         }
         switch isTurnOwnerWin {
         case true:
-            print("\(turnOwnerName)의 승리!")
+            print(String(format: Message.win.description, turnOwnerName))
         case false:
-            print("\(turnOwnerName)의 턴입니다.")
+            print(String(format: Message.turn.description, turnOwnerName))
         }
     }
 }
